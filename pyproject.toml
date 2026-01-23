@@ -1,6 +1,6 @@
 [project]
 name = "detect-shadowed-modules"
-version = "0.1.0"
+version = "0.2.0"
 description = "Detect conflicting directory names across Python's sys.path that shadow installed packages"
 keywords = ["import", "shadowing", "diagnostics"]
 readme = "README.md"

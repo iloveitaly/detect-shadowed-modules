@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/iloveitaly/detect-shadowed-modules/compare/v0.1.0...v0.2.0) (2026-01-23)
+
+
+### Features
+
+* **editable:** detect editable package paths via uv pip list ([9027111](https://github.com/iloveitaly/detect-shadowed-modules/commit/9027111d622a52029aa4f176448d4834ba1ea6fb))
+
+
+### Documentation
+
+* expand readme with searched paths and debugging tips ([240064a](https://github.com/iloveitaly/detect-shadowed-modules/commit/240064af0c3965ca4222176980301b5f0cc29fa8))
+
 ## 0.1.0 (2026-01-23)
 
 
