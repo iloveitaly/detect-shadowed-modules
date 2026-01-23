@@ -2,7 +2,7 @@
 name = "detect-shadowed-modules"
 version = "0.1.0"
 description = "Detect conflicting directory names across Python's sys.path that shadow installed packages"
-keywords = ["import", "sys.path", "shadowing", "diagnostics"]
+keywords = ["import", "shadowing", "diagnostics"]
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
