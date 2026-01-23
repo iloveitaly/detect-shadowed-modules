@@ -141,7 +141,9 @@ def test_format_report_with_searched_paths(tmp_path: Path) -> None:
     searched_paths = [str(path1), str(path2), "/some/other/path"]
     editable_paths = {str(path1)}
 
-    report = detect_shadowed_modules.format_report(conflicts, searched_paths, editable_paths)
+    report = detect_shadowed_modules.format_report(
+        conflicts, searched_paths, editable_paths
+    )
 
     assert "Searched directories (3 total):" in report
     # Check for path and editable marker (may have ANSI color codes)
@@ -160,7 +162,9 @@ def test_format_json_with_searched_paths(tmp_path: Path) -> None:
     searched_paths = [str(path1), str(path2), "/some/other/path"]
     editable_paths = {str(path1)}
 
-    json_output = detect_shadowed_modules.format_json(conflicts, searched_paths, editable_paths)
+    json_output = detect_shadowed_modules.format_json(
+        conflicts, searched_paths, editable_paths
+    )
     data = json.loads(json_output)
 
     assert "shadowed" in data
@@ -179,7 +183,9 @@ def test_format_json_no_conflicts_with_searched_paths(tmp_path: Path) -> None:
     searched_paths = [str(tmp_path / "path1"), str(tmp_path / "path2")]
     editable_paths = {str(tmp_path / "path1")}
 
-    json_output = detect_shadowed_modules.format_json({}, searched_paths, editable_paths)
+    json_output = detect_shadowed_modules.format_json(
+        {}, searched_paths, editable_paths
+    )
     data = json.loads(json_output)
 
     assert data["shadowed"] == []

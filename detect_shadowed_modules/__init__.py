@@ -216,7 +216,9 @@ def format_report(
 
     # Add searched directories section when conflicts exist
     if searched_paths and editable_paths is not None:
-        lines.append(f"{yellow}Searched directories ({len(searched_paths)} total):{reset}")
+        lines.append(
+            f"{yellow}Searched directories ({len(searched_paths)} total):{reset}"
+        )
         for path_str in searched_paths:
             is_editable = path_str in editable_paths
             marker = f" {cyan}[editable]{reset}" if is_editable else ""

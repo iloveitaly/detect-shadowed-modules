@@ -29,7 +29,9 @@ def test_get_editable_paths_success() -> None:
     mock_result.returncode = 0
     mock_result.stdout = mock_output
 
-    with patch("detect_shadowed_modules.editable.subprocess.run", return_value=mock_result):
+    with patch(
+        "detect_shadowed_modules.editable.subprocess.run", return_value=mock_result
+    ):
         paths = get_editable_paths()
 
     assert len(paths) == 2
@@ -45,7 +47,9 @@ def test_get_editable_paths_empty_list() -> None:
     mock_result.returncode = 0
     mock_result.stdout = mock_output
 
-    with patch("detect_shadowed_modules.editable.subprocess.run", return_value=mock_result):
+    with patch(
+        "detect_shadowed_modules.editable.subprocess.run", return_value=mock_result
+    ):
         paths = get_editable_paths()
 
     assert paths == []
@@ -72,7 +76,9 @@ def test_get_editable_paths_missing_field() -> None:
     mock_result.returncode = 0
     mock_result.stdout = mock_output
 
-    with patch("detect_shadowed_modules.editable.subprocess.run", return_value=mock_result):
+    with patch(
+        "detect_shadowed_modules.editable.subprocess.run", return_value=mock_result
+    ):
         paths = get_editable_paths()
 
     assert len(paths) == 1
@@ -96,7 +102,9 @@ def test_get_editable_paths_uv_error() -> None:
     mock_result.returncode = 1
     mock_result.stdout = ""
 
-    with patch("detect_shadowed_modules.editable.subprocess.run", return_value=mock_result):
+    with patch(
+        "detect_shadowed_modules.editable.subprocess.run", return_value=mock_result
+    ):
         paths = get_editable_paths()
 
     assert paths == []
@@ -108,7 +116,9 @@ def test_get_editable_paths_invalid_json() -> None:
     mock_result.returncode = 0
     mock_result.stdout = "not valid json"
 
-    with patch("detect_shadowed_modules.editable.subprocess.run", return_value=mock_result):
+    with patch(
+        "detect_shadowed_modules.editable.subprocess.run", return_value=mock_result
+    ):
         paths = get_editable_paths()
 
     assert paths == []
@@ -144,7 +154,9 @@ def test_get_editable_paths_command_args() -> None:
     mock_result.returncode = 0
     mock_result.stdout = "[]"
 
-    with patch("detect_shadowed_modules.editable.subprocess.run", return_value=mock_result) as mock_run:
+    with patch(
+        "detect_shadowed_modules.editable.subprocess.run", return_value=mock_result
+    ) as mock_run:
         get_editable_paths()
 
     # Verify the command called
@@ -182,7 +194,9 @@ def test_integration_with_find_conflicts(tmp_path: Path) -> None:
     mock_result.returncode = 0
     mock_result.stdout = mock_output
 
-    with patch("detect_shadowed_modules.editable.subprocess.run", return_value=mock_result):
+    with patch(
+        "detect_shadowed_modules.editable.subprocess.run", return_value=mock_result
+    ):
         editable_paths = get_editable_paths()
 
     # Combine paths as main() does
