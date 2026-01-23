@@ -171,11 +171,16 @@ def find_conflicts(paths: list[str] | None = None) -> dict[str, list[Path]]:
 
 def format_report(conflicts: dict[str, list[Path]]) -> str:
     """Format conflicts as a human-readable report."""
+    # ANSI color codes
+    green = "\033[92m"
+    red = "\033[91m"
+    reset = "\033[0m"
+
     if not conflicts:
-        return "No conflicting directory names found across sys.path."
+        return f"{green}No conflicting directory names found{reset}"
 
     lines = [
-        "Conflicting directory names detected:",
+        f"{red}Conflicting directory names detected:{reset}",
         "",
         "These directories exist in multiple sys.path locations. The first",
         "location listed will shadow the others during import.",
@@ -245,7 +250,7 @@ def main() -> int:
 
     setup_logging(quiet=args.quiet or args.json_output)
 
-    logger.info("Scanning sys.path for directory conflicts...")
+    logger.debug("Scanning sys.path for directory conflicts...")
     conflicts = find_conflicts()
 
     if args.json_output:
