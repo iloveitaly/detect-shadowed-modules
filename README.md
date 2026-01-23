@@ -75,6 +75,12 @@ location listed will shadow the others during import.
   requests/
   → /home/user/myproject/requests (shadows others)
     /usr/lib/python3/site-packages/requests [requests] (shadowed)
+
+Searched directories (50 total):
+  /home/user/myproject [editable]
+  /home/user/.venv/lib/python3.13/site-packages
+  /usr/lib/python3/site-packages
+  ...
 ```
 
 ### JSON Format
@@ -87,6 +93,20 @@ location listed will shadow the others during import.
       "shadowed_by": "/home/user/myproject/requests",
       "owner": "requests"
     }
+  ],
+  "searched_paths": [
+    {
+      "path": "/home/user/myproject",
+      "editable": true
+    },
+    {
+      "path": "/home/user/.venv/lib/python3.13/site-packages",
+      "editable": false
+    },
+    {
+      "path": "/usr/lib/python3/site-packages",
+      "editable": false
+    }
   ]
 }
 ```
@@ -94,15 +114,33 @@ location listed will shadow the others during import.
 ## How It Works
 
 The tool scans all directories in `sys.path` and:
-1. Identifies subdirectories in each path
-2. Detects when the same directory name appears in multiple locations
-3. Reports which packages are being shadowed and by what
-4. Attempts to identify the installed package that owns each directory
+1. Automatically detects editable packages installed via `uv` (using `uv pip list -e`)
+2. Combines editable package paths with `sys.path` (editable paths take precedence)
+3. Identifies subdirectories in each path
+4. Detects when the same directory name appears in multiple locations
+5. Reports which packages are being shadowed and by what
+6. Attempts to identify the installed package that owns each directory
 
 Excluded from scanning:
 - Hidden directories (starting with `.`)
 - `__pycache__` directories
 - Package metadata directories (`.dist-info`, `.egg-info`)
+
+## Debugging Import Issues
+
+If you suspect a module is being imported from the wrong location, you can check where Python is actually loading it from:
+
+```bash
+python -c 'import <module>; print(<module>.__file__)'
+```
+
+For example:
+```bash
+python -c 'import requests; print(requests.__file__)'
+# Output: /home/user/myproject/requests/__init__.py
+```
+
+This will show you the exact file path Python is using for the import, helping you confirm if shadowing is occurring.
 
 ## Exit Codes
 
