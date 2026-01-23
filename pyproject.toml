@@ -1,11 +1,11 @@
 [project]
 name = "detect-shadowed-modules"
 version = "0.1.0"
-description = ""
-keywords = []
+description = "Detect conflicting directory names across Python's sys.path that shadow installed packages"
+keywords = ["import", "sys.path", "shadowing", "diagnostics"]
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["structlog-config==0.6.0"]
+dependencies = []
 authors = [{ name = "Michael Bianco", email = "mike@mikebian.co" }]
 urls = { "Repository" = "https://github.com/iloveitaly/detect-shadowed-modules" }
 
