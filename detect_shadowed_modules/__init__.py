@@ -31,6 +31,8 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+from detect_shadowed_modules.editable import get_editable_paths
+
 logger = logging.getLogger(__name__)
 
 
@@ -169,11 +171,24 @@ def find_conflicts(paths: list[str] | None = None) -> dict[str, list[Path]]:
     return {name: locs for name, locs in dir_locations.items() if len(locs) > 1}
 
 
-def format_report(conflicts: dict[str, list[Path]]) -> str:
-    """Format conflicts as a human-readable report."""
+def format_report(
+    conflicts: dict[str, list[Path]],
+    searched_paths: list[str] | None = None,
+    editable_paths: set[str] | None = None,
+) -> str:
+    """
+    Format conflicts as a human-readable report.
+
+    Args:
+        conflicts: Dict mapping conflicting directory names to their locations.
+        searched_paths: List of paths that were searched. Shown when conflicts exist.
+        editable_paths: Set of paths that are editable packages.
+    """
     # ANSI color codes
     green = "\033[92m"
     red = "\033[91m"
+    yellow = "\033[93m"
+    cyan = "\033[96m"
     reset = "\033[0m"
 
     if not conflicts:
@@ -199,11 +214,31 @@ def format_report(conflicts: dict[str, list[Path]]) -> str:
             lines.append(f"{prefix}{full_path}{owner_info}{suffix}")
         lines.append("")
 
+    # Add searched directories section when conflicts exist
+    if searched_paths and editable_paths is not None:
+        lines.append(f"{yellow}Searched directories ({len(searched_paths)} total):{reset}")
+        for path_str in searched_paths:
+            is_editable = path_str in editable_paths
+            marker = f" {cyan}[editable]{reset}" if is_editable else ""
+            lines.append(f"  {path_str}{marker}")
+        lines.append("")
+
     return "\n".join(lines)
 
 
-def format_json(conflicts: dict[str, list[Path]]) -> str:
-    """Format conflicts as JSON, including shadowed directories and what shadows them."""
+def format_json(
+    conflicts: dict[str, list[Path]],
+    searched_paths: list[str] | None = None,
+    editable_paths: set[str] | None = None,
+) -> str:
+    """
+    Format conflicts as JSON, including shadowed directories and what shadows them.
+
+    Args:
+        conflicts: Dict mapping conflicting directory names to their locations.
+        searched_paths: List of paths that were searched.
+        editable_paths: Set of paths that are editable packages.
+    """
     shadowed = []
 
     for name, locations in conflicts.items():
@@ -224,7 +259,19 @@ def format_json(conflicts: dict[str, list[Path]]) -> str:
                 }
             )
 
-    return json.dumps({"shadowed": shadowed}, indent=2)
+    result = {"shadowed": shadowed}
+
+    # Add searched paths information
+    if searched_paths is not None and editable_paths is not None:
+        result["searched_paths"] = [
+            {
+                "path": path_str,
+                "editable": path_str in editable_paths,
+            }
+            for path_str in searched_paths
+        ]
+
+    return json.dumps(result, indent=2)
 
 
 def main() -> int:
@@ -250,13 +297,30 @@ def main() -> int:
 
     setup_logging(quiet=args.quiet or args.json_output)
 
+    # Get editable package paths
+    editable_paths_list = get_editable_paths()
+    logger.debug(f"Found {len(editable_paths_list)} editable package(s)")
+
+    # Track which paths are editable (as strings for easy comparison)
+    editable_paths_set = {str(p) for p in editable_paths_list}
+
+    # Combine editable paths with sys.path (editable paths first, then deduplicate)
+    combined_paths = [str(p) for p in editable_paths_list] + sys.path
+    # Deduplicate while preserving order
+    seen = set()
+    unique_paths = []
+    for path in combined_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+
     logger.debug("Scanning sys.path for directory conflicts...")
-    conflicts = find_conflicts()
+    conflicts = find_conflicts(unique_paths)
 
     if args.json_output:
-        print(format_json(conflicts))
+        print(format_json(conflicts, unique_paths, editable_paths_set))
     else:
-        print(format_report(conflicts))
+        print(format_report(conflicts, unique_paths, editable_paths_set))
 
     return 1 if conflicts else 0
 

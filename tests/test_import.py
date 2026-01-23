@@ -132,7 +132,62 @@ def test_format_json_with_conflicts(tmp_path: Path) -> None:
     assert all("shadowed_by" in item for item in data["shadowed"])
 
 
-def test_main_no_conflicts(tmp_path: Path, capsys, monkeypatch) -> None:
+def test_format_report_with_searched_paths(tmp_path: Path) -> None:
+    """Test formatting report with searched paths and editable markers."""
+    path1 = tmp_path / "path1"
+    path2 = tmp_path / "path2"
+    conflicts = {"testpkg": [path1, path2]}
+
+    searched_paths = [str(path1), str(path2), "/some/other/path"]
+    editable_paths = {str(path1)}
+
+    report = detect_shadowed_modules.format_report(conflicts, searched_paths, editable_paths)
+
+    assert "Searched directories (3 total):" in report
+    # Check for path and editable marker (may have ANSI color codes)
+    assert str(path1) in report
+    assert "[editable]" in report
+    assert str(path2) in report
+    assert "/some/other/path" in report
+
+
+def test_format_json_with_searched_paths(tmp_path: Path) -> None:
+    """Test JSON formatting with searched paths and editable markers."""
+    path1 = tmp_path / "path1"
+    path2 = tmp_path / "path2"
+    conflicts = {"testpkg": [path1, path2]}
+
+    searched_paths = [str(path1), str(path2), "/some/other/path"]
+    editable_paths = {str(path1)}
+
+    json_output = detect_shadowed_modules.format_json(conflicts, searched_paths, editable_paths)
+    data = json.loads(json_output)
+
+    assert "shadowed" in data
+    assert "searched_paths" in data
+    assert len(data["searched_paths"]) == 3
+
+    # Check editable marking
+    path_data = {p["path"]: p["editable"] for p in data["searched_paths"]}
+    assert path_data[str(path1)] is True
+    assert path_data[str(path2)] is False
+    assert path_data["/some/other/path"] is False
+
+
+def test_format_json_no_conflicts_with_searched_paths(tmp_path: Path) -> None:
+    """Test JSON formatting with no conflicts but with searched paths."""
+    searched_paths = [str(tmp_path / "path1"), str(tmp_path / "path2")]
+    editable_paths = {str(tmp_path / "path1")}
+
+    json_output = detect_shadowed_modules.format_json({}, searched_paths, editable_paths)
+    data = json.loads(json_output)
+
+    assert data["shadowed"] == []
+    assert "searched_paths" in data
+    assert len(data["searched_paths"]) == 2
+
+
+def test_main_no_conflicts(tmp_path: Path, capsys) -> None:
     """Test main function with no conflicts."""
     path1 = tmp_path / "path1"
     path1.mkdir()
