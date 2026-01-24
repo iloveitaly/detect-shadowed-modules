@@ -1,7 +1,17 @@
-# detect-shadowed-modules
+# Detect Python Shadowed Modules
 
 Detect conflicting directory names across Python's `sys.path` that may be shadowing your installed packages.
 
+Common cases where this happened:
+
+* Using an editable package. All folders within the editable package dir (including `tests`) are
+  added to `sys.path` and there is no way to define precedence (at least, as of 2026-01-24 when using `uv`)
+* A package that has been improperly packaged with something like a `tests` directory.
+  * There are two different types of Python package distributions: a source distribution and a built distribution.
+    A source distribution can be downloaded on PyPy using the tar.gzip, where a built distribution is the wheel with the extension `whl`.
+    These distributions may not use the same distribution script and can contain different contents. 
+
+If you like this project, you'll probably enjoy [uv-development-toggle](https://github.com/iloveitaly/uv-development-toggle)
 ## Problem
 
 When Python imports a module, it searches directories in `sys.path` order. If the same directory name exists in multiple `sys.path` entries, only the first one is used—potentially shadowing packages you intended to import. This can lead to confusing import errors and unexpected behavior.
@@ -38,11 +48,10 @@ uvx detect-shadowed-modules@latest --help
 # Print conflicts to stdout with scanning progress
 detect-shadowed-modules
 
+detect-shadowed-modules --json
+
 # Quiet mode (conflicts only, no progress messages)
 detect-shadowed-modules -q
-
-# Output as JSON
-detect-shadowed-modules --json
 ```
 
 ### As a Python Module
@@ -122,6 +131,7 @@ The tool scans all directories in `sys.path` and:
 6. Attempts to identify the installed package that owns each directory
 
 Excluded from scanning:
+
 - Hidden directories (starting with `.`)
 - `__pycache__` directories
 - Package metadata directories (`.dist-info`, `.egg-info`)
