@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/iloveitaly/detect-shadowed-modules/compare/v0.2.0...v0.2.1) (2026-01-24)
+
+
+### Documentation
+
+* clarify package naming and explain shadowing scenarios ([10598cb](https://github.com/iloveitaly/detect-shadowed-modules/commit/10598cbf8e45c9f5666e87b4f4336984f878e8cd))
+
 ## [0.2.0](https://github.com/iloveitaly/detect-shadowed-modules/compare/v0.1.0...v0.2.0) (2026-01-23)
 
 
