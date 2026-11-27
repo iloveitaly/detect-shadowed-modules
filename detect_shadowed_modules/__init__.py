@@ -72,8 +72,7 @@ def get_subdirectories(path: Path) -> list[str]:
             if (
                 name.startswith(".")
                 or name == "__pycache__"
-                or name.endswith(".dist-info")
-                or name.endswith(".egg-info")
+                or name.endswith((".dist-info", ".egg-info"))
             ):
                 logger.debug(f"  Skipping: {name}/")
                 continue
