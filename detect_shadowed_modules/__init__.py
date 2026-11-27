@@ -33,6 +33,8 @@ from pathlib import Path
 
 from detect_shadowed_modules.editable import get_editable_paths
 
+from .version import __version__
+
 logger = logging.getLogger(__name__)
 
 
@@ -294,6 +296,12 @@ def main() -> int:
         action="store_true",
         dest="json_output",
         help="Output as JSON",
+    )
+    parser.add_argument(
+        "-V",
+        "--version",
+        action="version",
+        version=f"detect-shadowed-modules version {__version__}",
     )
     args = parser.parse_args()
 

@@ -14,6 +14,11 @@ def test_import() -> None:
     assert isinstance(detect_shadowed_modules.__name__, str)
 
 
+def test_version() -> None:
+    """Test that the version is available."""
+    assert isinstance(detect_shadowed_modules.__version__, str)
+
+
 def test_get_subdirectories(tmp_path: Path) -> None:
     """Test getting subdirectories from a path."""
     # Create test directory structure

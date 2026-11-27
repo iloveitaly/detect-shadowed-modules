@@ -5,16 +5,27 @@ description = "Detect conflicting directory names across Python's sys.path that 
 keywords = ["import", "shadowing", "diagnostics"]
 readme = "README.md"
 requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
 dependencies = []
 authors = [{ name = "Michael Bianco", email = "mike@mikebian.co" }]
 urls = { "Repository" = "https://github.com/iloveitaly/detect-shadowed-modules" }
+
 
 # additional packaging information: https://packaging.python.org/en/latest/specifications/core-metadata/#license
 [project.scripts]
 detect-shadowed-modules = "detect_shadowed_modules:main"
 
+
 [build-system]
-requires = ["uv_build>=0.9.0,<0.10.0"]
+requires = ["uv_build>=0.11.0,<0.14"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
@@ -22,10 +33,25 @@ build-backend = "uv_build"
 module-root = ""
 
 [dependency-groups]
-dev = ["pytest>=8.3.3","pyright[nodejs]>=1.1.380","ruff>=0.8.0"]
+dev = [
+    "pytest>=8.3.4",
+    "pyright[nodejs]>=1.1.408",
+    "ruff>=0.15.0",
+    "coverage>=7.13.4",
+    "pytest-cov>=7.0.0",
+    "covdefaults>=2.3.0",
+    "beautiful-traceback>=1.0.2",
+]
 
 [tool.pyright]
 exclude = ["examples/", "playground/", "tmp/", ".venv/", "tests/"]
 
-[tool.ruff]
-extend-exclude = ["playground.py", "playground/"]
+[tool.pytest.ini_options]
+addopts = "--cov --cov-report=term-missing --cov-report=html:tmp/htmlcov"
+
+[tool.coverage.run]
+plugins = ["covdefaults"]
+source = ["detect_shadowed_modules"]
+
+[tool.coverage.report]
+fail_under = 50
