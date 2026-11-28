@@ -32,6 +32,7 @@ def get_editable_paths() -> list[Path]:
             capture_output=True,
             text=True,
             timeout=10,
+            check=False,
         )
 
         if result.returncode != 0:
@@ -61,6 +62,6 @@ def get_editable_paths() -> list[Path]:
     except subprocess.TimeoutExpired:
         logger.debug("uv pip list timed out")
         return []
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001  # discovery is best-effort and must not fail the CLI
         logger.debug(f"Unexpected error getting editable paths: {e}")
         return []
