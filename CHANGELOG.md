@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/iloveitaly/detect-shadowed-modules/compare/v0.2.1...v0.2.2) (2026-11-28)
+
+
+### Documentation
+
+* add template README badges and local CLI section ([#37](https://github.com/iloveitaly/detect-shadowed-modules/issues/37)) ([48e94cf](https://github.com/iloveitaly/detect-shadowed-modules/commit/48e94cf44cbeb40f732670684aa4a754a87894ef))
+
 ## [0.2.1](https://github.com/iloveitaly/detect-shadowed-modules/compare/v0.2.0...v0.2.1) (2026-11-28)
 
 
