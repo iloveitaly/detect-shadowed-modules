@@ -1,3 +1,8 @@
+[![Release Notes](https://img.shields.io/github/release/iloveitaly/detect-shadowed-modules)](https://github.com/iloveitaly/detect-shadowed-modules/releases)
+[![Downloads](https://static.pepy.tech/badge/detect-shadowed-modules/month)](https://pepy.tech/project/detect-shadowed-modules)
+![GitHub CI Status](https://github.com/iloveitaly/detect-shadowed-modules/actions/workflows/build_and_publish.yml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # Detect Python Shadowed Modules
 
 Detect conflicting directory names across Python's `sys.path` that may be shadowing your installed packages.
@@ -159,4 +164,14 @@ This will show you the exact file path Python is using for the import, helping y
 
 This makes it easy to use in CI/CD pipelines or pre-commit hooks.
 
+## Local CLI development
+
+Run `just install_editable` to install this checkout globally in editable mode. Source changes are reflected without reinstalling.
+
+This requires `uv`, `just`, `zsh`, and `jq`. If mise is available, the recipe also updates every installed `pipx:detect-shadowed-modules` environment so mise can use the local checkout. Re-run after mise upgrades, which replace those editable installations.
+
 ## [MIT License](LICENSE.md)
+
+---
+
+*This project was created from [iloveitaly/python-package-template](https://github.com/iloveitaly/python-package-template)*
