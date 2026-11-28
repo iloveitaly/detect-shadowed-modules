@@ -5,13 +5,17 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-
 import detect_shadowed_modules
 
 
 def test_import() -> None:
     """Test that the module can be imported."""
     assert isinstance(detect_shadowed_modules.__name__, str)
+
+
+def test_version() -> None:
+    """Test that the version is available."""
+    assert isinstance(detect_shadowed_modules.__version__, str)
 
 
 def test_get_subdirectories(tmp_path: Path) -> None:
@@ -199,9 +203,11 @@ def test_main_no_conflicts(tmp_path: Path, capsys) -> None:
     path1.mkdir()
     (path1 / "package1").mkdir()
 
-    with patch.object(sys, "argv", ["detect-shadowed-modules"]):
-        with patch.object(sys, "path", [str(path1)]):
-            exit_code = detect_shadowed_modules.main()
+    with (
+        patch.object(sys, "argv", ["detect-shadowed-modules"]),
+        patch.object(sys, "path", [str(path1)]),
+    ):
+        exit_code = detect_shadowed_modules.main()
 
     captured = capsys.readouterr()
     assert exit_code == 0
@@ -217,9 +223,11 @@ def test_main_with_conflicts(tmp_path: Path, capsys) -> None:
     (path1 / "shared").mkdir()
     (path2 / "shared").mkdir()
 
-    with patch.object(sys, "argv", ["detect-shadowed-modules"]):
-        with patch.object(sys, "path", [str(path1), str(path2)]):
-            exit_code = detect_shadowed_modules.main()
+    with (
+        patch.object(sys, "argv", ["detect-shadowed-modules"]),
+        patch.object(sys, "path", [str(path1), str(path2)]),
+    ):
+        exit_code = detect_shadowed_modules.main()
 
     captured = capsys.readouterr()
     assert exit_code == 1
@@ -233,9 +241,11 @@ def test_main_quiet_mode(tmp_path: Path, capsys) -> None:
     path1.mkdir()
     (path1 / "package1").mkdir()
 
-    with patch.object(sys, "argv", ["detect-shadowed-modules", "-q"]):
-        with patch.object(sys, "path", [str(path1)]):
-            exit_code = detect_shadowed_modules.main()
+    with (
+        patch.object(sys, "argv", ["detect-shadowed-modules", "-q"]),
+        patch.object(sys, "path", [str(path1)]),
+    ):
+        exit_code = detect_shadowed_modules.main()
 
     captured = capsys.readouterr()
     assert exit_code == 0
@@ -252,9 +262,11 @@ def test_main_json_output(tmp_path: Path, capsys) -> None:
     (path1 / "shared").mkdir()
     (path2 / "shared").mkdir()
 
-    with patch.object(sys, "argv", ["detect-shadowed-modules", "--json"]):
-        with patch.object(sys, "path", [str(path1), str(path2)]):
-            exit_code = detect_shadowed_modules.main()
+    with (
+        patch.object(sys, "argv", ["detect-shadowed-modules", "--json"]),
+        patch.object(sys, "path", [str(path1), str(path2)]),
+    ):
+        exit_code = detect_shadowed_modules.main()
 
     captured = capsys.readouterr()
     assert exit_code == 1

@@ -19,7 +19,7 @@ When Python imports a module, it searches directories in `sys.path` order. If th
 ### Example Conflict Scenario
 
 ```python
-sys.path = ['/project', '/usr/lib/python3/site-packages']
+sys.path = ["/project", "/usr/lib/python3/site-packages"]
 ```
 
 If both paths contain a `requests/` directory:
